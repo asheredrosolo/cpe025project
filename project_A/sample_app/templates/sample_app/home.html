@@ -1,0 +1,16 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+    {% for item in key %}
+        <article class="media content-section">
+            <img src="{{ item.author.profile.image.url }}" class="rounded-circle article-img">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ item.author }}</a>
+                    <small class="text-muted">{{ item.date|date:"F d, Y" }}</small>
+                </div>
+                <h2><a class="article-title" href="{% url 'data-detail' item.id %}">{{ item.title }}</a></h2>
+                <p class="article-content">{{ item.content }}</p>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
