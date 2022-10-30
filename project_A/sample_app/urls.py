@@ -5,11 +5,13 @@ from .views import (
     DataCreateView,
     DataUpdateView,
     DataDeleteView,
+    UserDataListView,
 )
 from . import views
 
 urlpatterns = [
     path('', DataListView.as_view(), name = 'sample_app-home'),
+    path('user/<str:username>/', UserDataListView.as_view(), name = 'user-data'),
     path('data/<int:pk>/', DataDetailView.as_view(), name = 'data-detail'),
     path('data/new/', DataCreateView.as_view(), name = 'data-create'),
     path('data/<int:pk>/update/', DataUpdateView.as_view(), name = 'data-update'),
