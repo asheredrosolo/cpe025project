@@ -1,0 +1,23 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+    {% for item in key %}
+        <article class="media content-section">            
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ item.module }}</a>
+                    <small class="text-muted">({{ item.category }})</small>
+                </div>
+                <h3><a class="article-title" href="#">{{ item.question }}</a></h3>
+                {% if item.category.id == 2 %}
+                    <p class="article-content">a.) {{ item.option1 }}</p>
+                    <p class="article-content">b.) {{ item.option2 }}</p>
+                {% elif item.category.id == 1 %}
+                    <p class="article-content">a.) {{ item.option1 }}</p>
+                    <p class="article-content">b.) {{ item.option2 }}</p>
+                    <p class="article-content">c.) {{ item.option3 }}</p>
+                    <p class="article-content">d.) {{ item.option4 }}</p>
+                {% endif %}
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

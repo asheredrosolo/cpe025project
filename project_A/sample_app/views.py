@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import sample_db
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -11,21 +12,21 @@ from django.views.generic import (
 )
 
 # Create your views here.
-
+@login_required
 def home(request):
     context = {
         'key': sample_db.objects.all()
     }
     return render(request, "sample_app/home.html", context)
 
-class DataListView(ListView):
+class DataListView(LoginRequiredMixin, ListView):
     model = sample_db
     template_name = 'sample_app/home.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'key'
     ordering = ['-date']
     paginate_by = 5
 
-class UserDataListView(ListView):
+class UserDataListView(LoginRequiredMixin, ListView):
     model = sample_db
     template_name = 'sample_app/user_data.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'key'
@@ -35,7 +36,7 @@ class UserDataListView(ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return sample_db.objects.filter(author=user).order_by('-date')
 
-class DataDetailView(DetailView):
+class DataDetailView(LoginRequiredMixin, DetailView):
     model = sample_db
 
 class DataCreateView(LoginRequiredMixin, CreateView):

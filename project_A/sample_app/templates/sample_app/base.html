@@ -51,19 +51,25 @@
 
         <main role="main" class="container">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="content-section">
-                        <h3>Sidebar</h3>
-                        <p class='text-muted'>
-                        <ul class="list-group">
-                            <li class="list-group-item list-group-item-light">Modules</li>
-                            <li class="list-group-item list-group-item-light">Scores</li>
-                            <li class="list-group-item list-group-item-light">Create Quiz</li>
-                            <li class="list-group-item list-group-item-light">Edit Quiz</li>
-                        </ul>
-                        </p>
+                {% if user.is_authenticated %}
+                    <div class="col-md-3">
+                        <div class="content-section">
+                            <h3>Sidebar</h3>
+                            <p class='text-muted'>
+                            <ul class="list-group">
+                                <a href="{% url 'module' %}">
+                                    <li class="list-group-item list-group-item-light">Modules</li>
+                                </a>
+                                <a href="{% url 'questions' %}">
+                                    <li class="list-group-item list-group-item-light">Questions</li>
+                                </a>                                
+                                <li class="list-group-item list-group-item-light">Quiz</li>
+                                <li class="list-group-item list-group-item-light">Scores</li>
+                            </ul>
+                            </p>
+                        </div>
                     </div>
-                </div>
+                {% endif %}
                 <div class="col-md-8">
                     {% if messages %}
                     {% for message in messages %}

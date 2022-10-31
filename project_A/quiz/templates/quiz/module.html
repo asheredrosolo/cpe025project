@@ -1,0 +1,21 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+<div class="content-section">
+    <h1 class="mb-4">Modules</h1>
+    <a class="form-group" href="{% url 'module-create' %}">
+        <button class="btn btn-info">Add Module</button> 
+    </a>
+    <h1 class="mb-4"> </h1>
+    {% for item in key %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <h4 class="article-title">
+                        <a class="mr-2" href="{% url 'module-detail' item.id %}">{{ item.module }}</a>
+                    </h4>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+</div>
+{% endblock content %}
