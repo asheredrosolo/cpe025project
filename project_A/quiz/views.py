@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import questions, modules
+from .models import modules, category, trueorfalse, mcq, identification
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -56,13 +56,98 @@ class ModuleDeleteView(LoginRequiredMixin, DeleteView):
 
 @login_required
 def question_view(request):
-    context = {
-        'key': questions.objects.all()
-    }
-    return render(request, "quiz/questions.html", context)
+    cat1 = mcq.objects.all()
+    cat2 = trueorfalse.objects.all()
+    cat3 = identification.objects.all()
+    return render(request, "quiz/questions.html", {'cat1': cat1, 'cat2': cat2, 'cat3': cat3})
 
-class QuestionListView(LoginRequiredMixin, ListView):
-    model = questions
-    template_name = 'quiz/questions.html' #<app>/<model>_<viewtype>.html
-    context_object_name = 'key'
-    ordering = ['question']
+def cat_selection(request):
+    return render(request, 'quiz/question_selection.html')
+
+#-----------------------------------------------------------------------------------
+#           DETAIL VIEW
+#-----------------------------------------------------------------------------------
+
+class MCQDetailView(LoginRequiredMixin, DetailView):
+    model = mcq
+    template_name = 'quiz/mcq_detail.html'
+
+class TOFDetailView(LoginRequiredMixin, DetailView):
+    model = trueorfalse
+    template_name = 'quiz/tof_detail.html'
+
+class IdentificationDetailView(LoginRequiredMixin, DetailView):
+    model = identification
+    template_name = 'quiz/identification_detail.html'
+
+#-----------------------------------------------------------------------------------
+#           CREATE VIEW
+#-----------------------------------------------------------------------------------
+
+class MCQCreateView(LoginRequiredMixin, CreateView):
+    model = mcq
+    fields = ['question', 'module', 'option1', 'option2', 'option3', 'option4', 'answer']
+    template_name = 'quiz/create_mcq.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class TOFCreateView(LoginRequiredMixin, CreateView):
+    model = trueorfalse
+    fields = ['question', 'module', 'answer']
+    template_name = 'quiz/create_tof.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class IdentificationCreateView(LoginRequiredMixin, CreateView):
+    model = identification
+    fields = ['question', 'module', 'answer']
+    template_name = 'quiz/create_identification.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+#-----------------------------------------------------------------------------------
+#           UPDATE VIEW
+#-----------------------------------------------------------------------------------
+
+class MCQUpdateView(LoginRequiredMixin, UpdateView):
+    model = mcq
+    fields = ['question', 'module', 'option1', 'option2', 'option3', 'option4', 'answer']
+    template_name = 'quiz/create_mcq.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class TOFUpdateView(LoginRequiredMixin, UpdateView):
+    model = trueorfalse
+    fields = ['question', 'module', 'answer']
+    template_name = 'quiz/create_tof.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class IdentificationUpdateView(LoginRequiredMixin, UpdateView):
+    model = identification
+    fields = ['question', 'module', 'answer']
+    template_name = 'quiz/create_identification.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class MCQDeleteView(LoginRequiredMixin, DeleteView):
+    model = mcq
+    template_name = 'quiz/delete_mcq.html'
+    success_url = '/quiz/questions/'
+
+class TOFDeleteView(LoginRequiredMixin, DeleteView):
+    model = trueorfalse
+    template_name = 'quiz/delete_tof.html'
+    success_url = '/quiz/questions/'
+
+class IdentificationDeleteView(LoginRequiredMixin, DeleteView):
+    model = identification
+    template_name = 'quiz/delete_identification.html'
+    success_url = '/quiz/questions/'
+        

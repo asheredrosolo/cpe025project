@@ -1,0 +1,16 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+    <article class="media content-section">        
+        <div class="media-body">
+            <h2 class="article-title">{{ object.question }}</h2>
+            <p class="article-content">a.) {{ object.option1 }}</p>
+            <p class="article-content">b.) {{ object.option2 }}</p>
+            <p class="article-content">c.) {{ object.option3 }}</p>
+            <p class="article-content">d.) {{ object.option4 }}</p>
+            <div>
+                <a class="btn btn-secondary btn-sm mt-5 mb-1" href="{% url 'mcq-update' object.id %}">Update</a>
+                <a class="btn btn-danger btn-sm mt-5 mb-1" href="{% url 'mcq-delete' object.id %}">Delete</a>
+            </div>
+        </div>
+    </article>
+{% endblock content %}

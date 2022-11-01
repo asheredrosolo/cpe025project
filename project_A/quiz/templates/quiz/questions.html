@@ -1,23 +1,52 @@
 {% extends "sample_app/base.html" %}
 {% block content %}
-    {% for item in key %}
-        <article class="media content-section">            
+<div class="container">
+    <div class="media content-section row">
+        <a href="{% url 'category' %}">
+            <button class="btn btn-info ml-ll">
+                Add a question
+            </button>
+        </a>
+    </div>
+</div>
+    {% for item in cat1 %}
+        <article class="media content-section">
             <div class="media-body">
                 <div class="article-metadata">
                     <a class="mr-2" href="#">{{ item.module }}</a>
-                    <small class="text-muted">({{ item.category }})</small>
+                    <small class="text-muted">MCQ</small>
                 </div>
-                <h3><a class="article-title" href="#">{{ item.question }}</a></h3>
-                {% if item.category.id == 2 %}
-                    <p class="article-content">a.) {{ item.option1 }}</p>
-                    <p class="article-content">b.) {{ item.option2 }}</p>
-                {% elif item.category.id == 1 %}
-                    <p class="article-content">a.) {{ item.option1 }}</p>
-                    <p class="article-content">b.) {{ item.option2 }}</p>
-                    <p class="article-content">c.) {{ item.option3 }}</p>
-                    <p class="article-content">d.) {{ item.option4 }}</p>
-                {% endif %}
+                <h4><a class="article-title" href="{% url 'mcq-detail' item.id %}">{{ item.question }}</a></h4>
+                <p class="article-content">a.) {{ item.option1 }}</p>
+                <p class="article-content">b.) {{ item.option2 }}</p>
+                <p class="article-content">c.) {{ item.option3 }}</p>
+                <p class="article-content">d.) {{ item.option4 }}</p>
             </div>
         </article>
     {% endfor %}
+    {% for item in cat2 %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ item.module }}</a>
+                    <small class="text-muted">True or False</small>
+                </div>
+                <h4><a class="article-title" href="{% url 'tof-detail' item.id %}">{{ item.question }}</a></h4>
+                <p class="article-content">a.) True</p>
+                <p class="article-content">b.) False</p>
+            </div>
+        </article>
+    {% endfor %}
+    {% for item in cat3 %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ item.module }}</a>
+                    <small class="text-muted">Identification</small>
+                </div>
+                <h4><a class="article-title" href="{% url 'identification-detail' item.id %}">{{ item.question }}</a></h4>
+            </div>
+        </article>
+    {% endfor %}
+</div>
 {% endblock content %}

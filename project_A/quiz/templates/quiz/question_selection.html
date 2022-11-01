@@ -1,0 +1,26 @@
+{% extends "sample_app/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section"> 
+        <legend class="border-bottom mb-4">
+            Select Question Category
+        </legend>
+        <div>
+            <a href="{% url 'mcq-create' %}">
+                <button class="btn btn-outline-info mb-3 col-md-8" type="submit">
+                    MCQ
+                </button><br>
+            </a>
+            <a href="{% url 'tof-create' %}">
+                <button class="btn btn-outline-info mb-3 col-md-8" type="submit">
+                    True or False
+                </button><br>
+            </a>
+            <a href="{% url 'identification-create' %}">
+                <button class="btn btn-outline-info mb-3 col-md-8" type="submit">
+                    Identification
+                </button><br>
+            </a>
+        </div>
+    </div>
+{% endblock content %}

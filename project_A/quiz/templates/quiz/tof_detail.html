@@ -1,0 +1,14 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+    <article class="media content-section">        
+        <div class="media-body">
+            <h2 class="article-title">{{ object.question }}</h2>
+            <p class="article-content">a.) True</p>
+            <p class="article-content">b.) False</p>
+            <div>
+                <a class="btn btn-secondary btn-sm mt-5 mb-1" href="{% url 'tof-update' object.id %}">Update</a>
+                <a class="btn btn-danger btn-sm mt-5 mb-1" href="{% url 'tof-delete' object.id %}">Delete</a>
+            </div>
+        </div>
+    </article>
+{% endblock content %}

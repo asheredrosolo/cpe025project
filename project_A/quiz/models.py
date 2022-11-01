@@ -1,5 +1,3 @@
-from statistics import mode
-from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.urls import reverse
 
@@ -20,10 +18,26 @@ class category(models.Model):
     def __str__(self):
         return self.category
 
-class questions(models.Model):
+class TF(models.Model):
+    choices = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.choices
+
+class trueorfalse(models.Model):
     question = models.TextField()
     module = models.ForeignKey(modules, on_delete=models.CASCADE)
-    category = models.ForeignKey(category, on_delete=models.CASCADE)
+    answer = models.ForeignKey(TF, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.question
+    
+    def get_absolute_url(self):
+        return reverse('questions')
+
+class mcq(models.Model):
+    question = models.TextField()
+    module = models.ForeignKey(modules, on_delete=models.CASCADE)
     option1 = models.CharField(blank=True ,max_length=255)
     option2 = models.CharField(blank=True, max_length=255)
     option3 = models.CharField(blank=True, max_length=255)
@@ -32,6 +46,21 @@ class questions(models.Model):
 
     def __str__(self):
         return self.question
+    
+    def get_absolute_url(self):
+        return reverse('questions')
+
+class identification(models.Model):
+    question = models.TextField()
+    module = models.ForeignKey(modules, on_delete=models.CASCADE)
+    answer = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.question
+    
+    def get_absolute_url(self):
+        return reverse('questions')
+
     
     
 
