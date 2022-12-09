@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import modules, category, trueorfalse, mcq, identification
+from .models import modules, category, trueorfalse, mcq, identification, quiz
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -151,3 +151,26 @@ class IdentificationDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'quiz/delete_identification.html'
     success_url = '/quiz/questions/'
         
+#===================================================================================
+#           QUIZ VIEW
+#===================================================================================
+
+@login_required
+def quiz_view(request):
+    quiz_items = {
+        'key': quiz.objects.all(),
+    }
+    return render(request, "quiz/quiz.html", quiz_items)
+
+class QuizCreateView(LoginRequiredMixin, CreateView):
+    model = quiz
+    fields = ['quiz_title', 'module', 'mcq_questions', 'tof_questions', 'identification_questions' ]
+    template_name = 'quiz/create_quiz.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+class QuizDetailView(LoginRequiredMixin, DetailView):
+    model = quiz
+    template_name = 'quiz/quiz_detail.html'
+

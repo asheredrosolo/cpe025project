@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.urls import reverse
 
 # Create your models here.
@@ -60,6 +61,21 @@ class identification(models.Model):
     
     def get_absolute_url(self):
         return reverse('questions')
+
+class quiz(models.Model):
+    quiz_title = models.CharField(max_length=2555)
+    module = models.ForeignKey(modules, on_delete=models.CASCADE)
+    mcq_questions = models.ManyToManyField(mcq)
+    tof_questions = models.ManyToManyField(trueorfalse)
+    identification_questions = models.ManyToManyField(identification)
+
+    def __str__(self):
+        return self.quiz_title
+    
+    def get_absolute_url(self):
+        return reverse('quiz')
+    
+
 
     
     

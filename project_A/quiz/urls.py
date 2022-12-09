@@ -5,6 +5,7 @@ from .views import (
     MCQDetailView, MCQCreateView, MCQUpdateView, MCQDeleteView,
     TOFDetailView, TOFCreateView, TOFUpdateView, TOFDeleteView,
     IdentificationDetailView, IdentificationCreateView, IdentificationUpdateView, IdentificationDeleteView,
+    QuizCreateView, QuizDetailView
 )
 
 urlpatterns = [
@@ -38,5 +39,13 @@ urlpatterns = [
     path('identification/create/',IdentificationCreateView.as_view(), name = 'identification-create'),
     path('identification/<int:pk>/update/', IdentificationUpdateView.as_view(), name = 'identification-update'),
     path('identification/<int:pk>/delete/', IdentificationDeleteView.as_view(), name = 'identification-delete'),
+
+#===================================================================================
+#           QUIZ URL
+#===================================================================================
+
+    path('quiz/', views.quiz_view, name='quiz'),
+    path('quiz/create/',QuizCreateView.as_view(), name = 'quiz-create'),
+    path('quiz/<int:pk>/',QuizDetailView.as_view(), name = 'quiz-detail'),
 
 ]
