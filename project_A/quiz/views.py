@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import modules, category, trueorfalse, mcq, identification, quiz
+from .models import modules, category, trueorfalse, mcq, identification, quizzes
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
@@ -136,6 +136,10 @@ class IdentificationUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
+#-----------------------------------------------------------------------------------
+#           DELETE VIEW
+#-----------------------------------------------------------------------------------
+
 class MCQDeleteView(LoginRequiredMixin, DeleteView):
     model = mcq
     template_name = 'quiz/delete_mcq.html'
@@ -158,19 +162,38 @@ class IdentificationDeleteView(LoginRequiredMixin, DeleteView):
 @login_required
 def quiz_view(request):
     quiz_items = {
-        'key': quiz.objects.all(),
+        'key': quizzes.objects.all(),
     }
     return render(request, "quiz/quiz.html", quiz_items)
 
 class QuizCreateView(LoginRequiredMixin, CreateView):
-    model = quiz
+    model = quizzes
+    fields = ['quiz_title', 'module', 'mcq_questions', 'tof_questions', 'identification_questions' ]
+    template_name = 'quiz/create_quiz.html'
+
+class QuizTakeView(LoginRequiredMixin, DetailView):
+    model = quizzes
+    template_name = 'quiz/quiz_take.html'
+
+class QuizListView(LoginRequiredMixin, ListView):
+    model = quizzes
+    template_name = 'quiz/quiz.html' #<app>/<model>_<viewtype>.html
+    context_object_name = 'key'
+    ordering = ['module']
+
+class QuizDetailView(LoginRequiredMixin, DetailView):
+    model = quizzes
+    template_name = 'quiz/quiz_edit.html'
+
+class QuizUpdateView(LoginRequiredMixin, UpdateView):
+    model = quizzes
     fields = ['quiz_title', 'module', 'mcq_questions', 'tof_questions', 'identification_questions' ]
     template_name = 'quiz/create_quiz.html'
 
     def form_valid(self, form):
         return super().form_valid(form)
 
-class QuizDetailView(LoginRequiredMixin, DetailView):
-    model = quiz
-    template_name = 'quiz/quiz_detail.html'
-
+class QuizDeleteView(LoginRequiredMixin, DeleteView):
+    model = quizzes
+    template_name = 'quiz/delete_quiz.html'
+    success_url = '/quiz/quiz'

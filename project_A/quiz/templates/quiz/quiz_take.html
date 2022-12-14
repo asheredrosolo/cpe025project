@@ -1,0 +1,70 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            <h4 class="article-title">
+                <div class="article-metadata mt-2">
+                    <a class="mr-2" href="#">{{ object.quiz_title|capfirst }}</a>
+                </div>
+                {% for q in object.mcq_questions.all %}
+                    <p class="article-content mt-5">{{ q }}</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="mcq{{forloop.counter}}">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="mcq{{forloop.counter}}">
+                                {{ q.option1 }}
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="mcq{{forloop.counter}}">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="mcq{{forloop.counter}}">
+                                {{ q.option2 }}
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="mcq{{forloop.counter}}">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="mcq{{forloop.counter}}">
+                                {{ q.option3 }}
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="mcq{{forloop.counter}}">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="mcq{{forloop.counter}}">
+                                {{ q.option4 }}
+                            </label>
+                        </p>
+                    </div>                   
+                {% endfor %}
+                {% for q in object.tof_questions.all %}
+                    <p class="article-content mt-5">{{ q }}</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tof{{forloop.counter}}">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="tof{{forloop.counter}}">
+                                True
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="tof{{forloop.counter}}">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="tof{{forloop.counter}}">
+                                False
+                            </label>
+                        </p>
+                    </div>
+                {% endfor %}
+                {% for q in object.identification_questions.all %}
+                    <p class="article-content mt-5">{{ q }}</p>
+                    <div class="form-group">
+                        <label class="h6" for="identification{{forloop.counter}}">Type Your Answer:</label>
+                        <textarea class="form-control" id="identification{{forloop.counter}}" rows="1"></textarea>
+                    </div>
+                {% endfor %}
+            </h4>
+        </div>
+        <a class="form-group" href="#">
+            <button class="btn btn-info float-right mb-5 mt-2">Submit Quiz</button> 
+        </a>
+    </div>
+</article>
+{% endblock content %}

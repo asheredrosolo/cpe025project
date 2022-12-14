@@ -1,6 +1,6 @@
 from xmlrpc.client import boolean
 from django.contrib import admin
-from .models import identification, mcq, modules, category, trueorfalse, TF, quiz
+from .models import identification, mcq, modules, category, trueorfalse, TF, quizzes
 
 # Register your models here.
 admin.site.register(modules)
@@ -9,4 +9,4 @@ admin.site.register(trueorfalse)
 admin.site.register(TF)
 admin.site.register(mcq)
 admin.site.register(identification)
-admin.site.register(quiz)
+admin.site.register(quizzes)
