@@ -6,6 +6,7 @@ from .views import (
     TOFDetailView, TOFCreateView, TOFUpdateView, TOFDeleteView,
     IdentificationDetailView, IdentificationCreateView, IdentificationUpdateView, IdentificationDeleteView,
     QuizListView, QuizCreateView, QuizDetailView, QuizUpdateView, QuizDeleteView,
+    ScoreListView,
 )
 
 urlpatterns = [
@@ -58,5 +59,10 @@ urlpatterns = [
     path('pdf_view/<int:pk>/', views.viewpdf.as_view(), name='pdf-view'),
     path('pdf_download/<int:pk>/', views.downloadpdf.as_view(), name='pdf-download'),
 
+#===================================================================================
+#           SCORES URL
+#==============================================================================
+
+    path('score/', ScoreListView.as_view(), name='score-list'),    
 
 ]

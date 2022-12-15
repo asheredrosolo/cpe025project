@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 
@@ -74,7 +75,21 @@ class quizzes(models.Model):
     
     def get_absolute_url(self):
         return reverse('quiz')
+
+class scores(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz_title = models.CharField(max_length=255)
+    score = models.IntegerField()
+    correct = models.IntegerField()
+    wrong = models.IntegerField()
+    total_items = models.IntegerField()
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.quiz_title
     
+    def get_absolute_url(self):
+        return reverse('score-list')
 
 
     

@@ -1,0 +1,33 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+<div class="content-section">
+    <h1 class="mb-4">SCORES</h1>
+    <h1 class="mb-4"> </h1>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center text-success">#</th>
+                <th scope="col" class="text-center text-success">User</th>
+                <th scope="col" class="text-center text-success">Quiz</th>
+                <th scope="col" class="text-center text-success">Score</th>
+                <th scope="col" class="text-center text-success">Correct</th>
+                <th scope="col" class="text-center text-success">Wrong</th>
+                <th scope="col" class="text-center text-success">Date</th>
+             </tr>
+        </thead>
+        <tbody>
+            {% for item in key %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td class="text-center">{{ item.user|capfirst }}</td>
+                <td class="text-center">{{ item.quiz_title|title }}</td>
+                <td class="text-center font-weight-bold">{{ item.score }}/{{ item.total_items }}</td>
+                <td class="text-center">{{ item.correct }}</td>
+                <td class="text-center">{{ item.wrong }}</td>
+                <td class="text-center">{{ item.date|date:"F d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
+{% endblock content %}

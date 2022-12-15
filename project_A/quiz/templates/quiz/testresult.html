@@ -1,19 +1,22 @@
 {% extends "sample_app/base.html" %}
 {% block content %}
-<div class="content-section ">
+<div class="content-section">
     <h1>RESULTS:</h1>
-    <div class="card-columns align-right" style="padding: 10px; margin: 20px;">
-        <div class="card" style="width: 32rem; border:5px black solid">
+    <div class="card-columns align-right" style="padding: 0px; margin-top: 30px; margin-bottom: 50px;">
+        <div class="card" style="width: 43rem; border:5px black solid">
             <div class="card-body">
                 <h5 class="card-title text-primary mb-3">Score: {{score}}</h5> 
                 <p class="card-text">Percentage: {{percent}}%</p>
                 <p class="card-text">Correct answers: {{correct}}</p>
                 <p class="card-text">Incorrect answers: {{wrong}}</p>
                 <p class="card-text">Total questions: {{total}}</p>
-                <h5>Congratulations! You have completed the quiz!</h5>
+                <h5>Congratulations!</h5>
+                <h5>You have completed the quiz!</h5>
             </div>
         </div>
     </div>
- 
+    <a href="{% url 'quiz' %}">
+        <button class="btn btn-info btn-block" >Exit</button> 
+    </a>
 </div>
 {% endblock content %}

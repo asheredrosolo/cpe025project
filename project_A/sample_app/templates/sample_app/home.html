@@ -5,11 +5,11 @@
             <img src="{{ item.author.profile.image.url }}" class="rounded-circle article-img">
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="{% url 'user-data' item.author.username %}">{{ item.author }}</a>
+                    <a class="mr-2" href="{% url 'user-data' item.author.username %}">{{ item.author|capfirst }}</a>
                     <small class="text-muted">{{ item.date|date:"F d, Y" }}</small>
                 </div>
-                <h2><a class="article-title" href="{% url 'data-detail' item.id %}">{{ item.title }}</a></h2>
-                <p class="article-content">{{ item.content }}</p>
+                <h2><a class="article-title" href="{% url 'data-detail' item.id %}">{{ item.title|title }}</a></h2>
+                <p class="article-content">{{ item.content|capfirst }}</p>
             </div>
         </article>
     {% endfor %}

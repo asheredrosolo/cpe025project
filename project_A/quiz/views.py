@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.generic import (View, CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
-from .models import (identification, mcq, modules, quizzes,
+from .models import (identification, mcq, modules, quizzes, scores,
                      trueorfalse)
 
 # Create your views here.
@@ -202,6 +202,7 @@ class QuizDeleteView(LoginRequiredMixin, DeleteView):
 #           QUIZ ANSWERING AND SCORING
 #===================================================================================
 
+@login_required
 def take_quiz(request, *args, **kwargs):
 
     if request.method == 'POST':
@@ -221,7 +222,7 @@ def take_quiz(request, *args, **kwargs):
             else:
                 print(items[answer])
                 if m.answer == items[answer]: # Compares actual answer with user’s choice
-                    score+=10
+                    score+=1
                     correct+=1
                 else:
                     wrong+=1
@@ -235,7 +236,7 @@ def take_quiz(request, *args, **kwargs):
             else:
                 #print(items[answer])
                 if str(t.answer) == answer: # Compares actual answer with user’s choice
-                    score+=10
+                    score+=1
                     correct+=1
                 else:
                     wrong+=1
@@ -247,8 +248,8 @@ def take_quiz(request, *args, **kwargs):
                 wrong+=1
             else:
                 #print(items[answer])
-                if str(i.answer) == answer: # Compares actual answer with user’s choice
-                    score+=10
+                if str(i.answer).lower() == str(answer).lower() : # Compares actual answer with user’s choice
+                    score+=1
                     correct+=1
                 else:
                     wrong+=1
@@ -256,15 +257,25 @@ def take_quiz(request, *args, **kwargs):
         if total == 0:
             percent = 0/100
         else:
-            percent = score/(total*10)*100
-
+            percent = score/(total)*100
+    
         context = {
             'score':score,
             'correct':correct,
             'wrong':wrong,
-            'percent': int(percent),
+            'percent': percent,
             'total':total
         }
+
+        scores.objects.create(
+            user = request.user,
+            quiz_title=quiz.quiz_title,
+            score=score,
+            correct=correct,
+            wrong=wrong,
+            total_items=total,
+            )
+
         return render(request,'quiz/testresult.html',context)
     else:
         quiz = quizzes.objects.filter(id=kwargs['pk']).first()
@@ -276,6 +287,10 @@ def take_quiz(request, *args, **kwargs):
         }
         return render(request,'quiz/take_quiz.html',context)
 
+#===================================================================================
+#           RENDER TO PDF
+#===================================================================================
+
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)
@@ -284,10 +299,6 @@ def render_to_pdf(template_src, context_dict={}):
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
-
-#===================================================================================
-#           RENDER TO PDF
-#===================================================================================
 
 class viewpdf(View):
     
@@ -315,7 +326,22 @@ class downloadpdf(View):
         response['content-description'] = content
         return response
 
-    
+#===================================================================================
+#           SCORING
+#===================================================================================
+
+@login_required
+def quiz_view(request):
+    context = {
+        'key': scores.objects.all(),
+    }
+    return render(request, "quiz/scores.html", context)
+
+class ScoreListView(LoginRequiredMixin, ListView):
+    model = scores
+    template_name = 'quiz/scores.html' #<app>/<model>_<viewtype>.html
+    context_object_name = 'key'
+    ordering = ['date']
 
 
 
