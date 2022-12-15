@@ -51,4 +51,14 @@ urlpatterns = [
     path('quiz/<int:pk>/update/', QuizUpdateView.as_view(), name = 'quiz-update'),
     path('quiz/<int:pk>/delete/', QuizDeleteView.as_view(), name = 'quiz-delete'),
 
+#===================================================================================
+#           TEST QUIZ URL
+#===================================================================================
+
+    path('quiz/testquiz', views.testquiz, name='testquiz'),
+    path('quiz/testquiz2', views.testquiz2, name='testquiz2'),
+    path('pdf_view/<int:pk>/', views.viewpdf.as_view(), name='pdf-view'),
+    path('pdf_download/<int:pk>/', views.downloadpdf.as_view(), name='pdf-download'),
+
+
 ]

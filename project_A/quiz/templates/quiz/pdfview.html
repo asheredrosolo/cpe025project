@@ -1,0 +1,29 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <div style="margin-left: 20px">
+            {% for item in key %}
+                <h4>Name: __________________________________</h4>
+                <h4>Date: ________________________________
+                <h1>{{ item.quiz_title|capfirst }}</h1>
+                {% for q in item.mcq_questions.all %}
+                    <h3 style="margin-left: 10px">{{forloop.counter}}.) {{ q }}</h3>              
+                    <p style="margin-left: 50px">a. {{ q.option1 }}</p>
+                    <p style="margin-left: 50px">b. {{ q.option2 }}</p>                        
+                    <p style="margin-left: 50px">c. {{ q.option3 }}</p>                        
+                    <p style="margin-left: 50px">d. {{ q.option4 }}</p>               
+                {% endfor %}
+                {% for q in item.tof_questions.all %}
+                    <h3 style="margin-left: 10px">{{forloop.counter|add:item.mcq_questions.all.count}}.) {{ q }}</h3>                  
+                    <p style="margin-left: 50px">a. True</p>
+                    <p style="margin-left: 50px">b. False</p>                        
+                {% endfor %}
+                {% for q in item.identification_questions.all %}
+                    <h3 style="margin-left: 10px">{{forloop.counter|add:item.mcq_questions.all.count|add:item.tof_questions.all.count}}.) {{ q }}</h3>
+                    <p style="margin-left: 50px">Answer: ________________________________</p> 
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </body>
+</html>

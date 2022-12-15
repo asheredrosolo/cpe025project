@@ -1,14 +1,16 @@
-from django.shortcuts import render
+from io import BytesIO
+from xhtml2pdf import pisa
 from django.contrib.auth.decorators import login_required
-from .models import modules, category, trueorfalse, mcq, identification, quizzes
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import (
-    ListView,
-    CreateView,
-    DetailView,
-    UpdateView,
-    DeleteView,
-)
+from django.http import HttpResponse
+from django.shortcuts import render, get_list_or_404, get_object_or_404
+from django.template.loader import get_template
+from django.views.generic import (View, CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
+
+
+from .models import (TF, category, identification, mcq, modules, quizzes,
+                     trueorfalse)
 
 # Create your views here.
 
@@ -197,3 +199,119 @@ class QuizDeleteView(LoginRequiredMixin, DeleteView):
     model = quizzes
     template_name = 'quiz/delete_quiz.html'
     success_url = '/quiz/quiz'
+
+def testquiz(request):
+
+    if request.method == 'POST':
+        print(request.POST)
+        M = mcq.objects.all()
+        T = trueorfalse.objects.all()
+        I = identification.objects.all()
+        choice = TF.objects.all()
+        score=0
+        wrong=0
+        correct=0
+        total=0
+
+        for m in M:
+            total+=1
+            answer = request.POST.get(m.question) # Gets user’s choice, i.e the key of answer
+            items = vars(m) # Holds the value for choice
+            if not request.POST.get(m.question):
+                wrong+=1
+            else:
+                print(items[answer])
+                if m.answer == items[answer]: # Compares actual answer with user’s choice
+                    score+=10
+                    correct+=1
+                else:
+                    wrong+=1
+        
+        for t in T:
+            total+=1
+            answer = request.POST.get(t.question) # Gets user’s choice, i.e the key of answer
+            items = vars(t) # Holds the value for choice
+            if not request.POST.get(t.question):
+                wrong+=1
+            else:
+                #print(items[answer])
+                if str(t.answer) == answer: # Compares actual answer with user’s choice
+                    score+=10
+                    correct+=1
+                else:
+                    wrong+=1
+        
+
+        percent = score/(total*10) *100
+        context = {
+            'score':score,
+            'correct':correct,
+            'wrong':wrong,
+            'percent':percent,
+            'total':total
+        }
+        return render(request,'quiz/testresult.html',context)
+    else:
+        M = mcq.objects.all()
+        T = trueorfalse.objects.all()
+        I = identification.objects.all()
+        choice = TF.objects.first()
+        choice2 = TF.objects.last()
+        context = {
+            'M': M,
+            'T': T,
+            'I': I,
+            'choice': choice,
+            'choice2': choice2,
+        }
+        return render(request,'quiz/testquiz.html',context)
+
+def testquiz2(request):
+
+    if request.method == 'POST':
+        print(request.POST)
+        questions = quizzes.objects.all()
+        score=0
+        wrong=0
+        correct=0
+        total=0
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+class viewpdf(View):
+    
+    def get(self, request, *args, **kwargs):
+
+        data = {
+            'key': quizzes.objects.filter(id=kwargs['pk'])
+        }
+
+        pdf = render_to_pdf('quiz/pdfview.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
+
+class downloadpdf(View):
+    def get(self, request, *args, **kwargs):
+
+        data = {
+            'key': quizzes.objects.filter(id=kwargs['pk'])
+        }
+
+        pdf = render_to_pdf('quiz/pdfview.html', data)
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Test_%s.pdf" %("12345")
+        content = "attachment: filename='%s'" %(filename)
+        response['content-description'] = content
+        return response
+
+    
+
+
+
