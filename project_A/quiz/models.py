@@ -65,9 +65,9 @@ class identification(models.Model):
 class quizzes(models.Model):
     quiz_title = models.CharField(max_length=2555)
     module = models.ForeignKey(modules, on_delete=models.CASCADE)
-    mcq_questions = models.ManyToManyField(mcq)
-    tof_questions = models.ManyToManyField(trueorfalse)
-    identification_questions = models.ManyToManyField(identification)
+    mcq_questions = models.ManyToManyField(mcq, blank=True)
+    tof_questions = models.ManyToManyField(trueorfalse, blank=True)
+    identification_questions = models.ManyToManyField(identification, blank=True)
 
     def __str__(self):
         return self.quiz_title

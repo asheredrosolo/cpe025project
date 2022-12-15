@@ -12,7 +12,7 @@
             <div class="media-body">
                     <h4 class="article-title">
                         <a class="mr-2" href="#">{{ item.quiz_title|capfirst }}</a> 
-                        <a class="form-group" href="{% url 'quiz-take' item.id %}">
+                        <a class="form-group" href="{% url 'take-quiz' item.id %}">
                             <button type="button" class="btn ml-3 btn-warning font-weight-bold ml-30 float-right">Take Quiz</button>
                         </a>
                         {% if user.is_superuser %}

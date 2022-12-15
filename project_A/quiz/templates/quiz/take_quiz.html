@@ -1,0 +1,77 @@
+{% extends "sample_app/base.html" %}
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+    <form method='post' action=''>
+        {% csrf_token %}
+        <div class="article-metadata">
+            <h4 class="article-title">
+                <div class="article-metadata mt-2">
+                    <h1 class="mr-2 mb-5 text-primary" >{{ Quiz.quiz_title|title }}</h1>
+                </div>
+                {% for q in M %}
+                    <label for="question">
+                        <p class="article-content">{{ q }}</p>
+                    </label>
+                    <div class="form-check ml-3 mb-3">
+                        <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios1" value="option1">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="gridRadios1">
+                                {{ q.option1 }}
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios2" value="option2">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="gridRadios2">
+                                {{ q.option2 }}
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios3" value="option3">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="gridRadios3">
+                                {{ q.option3 }}
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios4" value="option4">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="gridRadios4">
+                                {{ q.option4 }}
+                            </label>
+                        </p>
+                    </div>                   
+                {% endfor %}
+                {% for q in T %}
+                    <label for="question">
+                        <p class="article-content">{{ q }}</p>
+                    </label>
+                    <div class="form-check ml-3 mb-3">
+                        <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios1" value="True">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="gridRadios1">
+                                True
+                            </label>
+                        </p>
+                        <input class="form-check-input" type="radio" name="{{q.question}}" id="gridRadios2" value="False">
+                        <p class="h6 light">
+                            <label class="form-check-label" for="gridRadios2">
+                                False
+                            </label>
+                        </p>
+                    </div>                   
+                {% endfor %}
+                {% for q in I %}
+                    <p class="article-content mt-5">{{ q }}</p>
+                    <div class="form-group ml-3 mb-3">
+                        <label class="h6 text-muted" for="textarea1">Type Your Answer:</label>
+                        <textarea class="form-control" name="{{q.question}}" id="textarea1" value="Text" rows="1"></textarea>
+                    </div>
+                {% endfor %}
+            </h4>
+        </div>
+        <a class="form-group" href="#">
+            <button class="btn btn-info float-right mb-5 mt-2" >Submit Quiz</button> 
+        </a>
+    </form>
+    </div>
+</article>
+{% endblock content %}

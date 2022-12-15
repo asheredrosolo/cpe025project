@@ -3,13 +3,11 @@ from xhtml2pdf import pisa
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse
-from django.shortcuts import render, get_list_or_404, get_object_or_404
+from django.shortcuts import render
 from django.template.loader import get_template
 from django.views.generic import (View, CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
-
-
-from .models import (TF, category, identification, mcq, modules, quizzes,
+from .models import (identification, mcq, modules, quizzes,
                      trueorfalse)
 
 # Create your views here.
@@ -181,7 +179,7 @@ class QuizListView(LoginRequiredMixin, ListView):
     model = quizzes
     template_name = 'quiz/quiz.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'key'
-    ordering = ['module']
+    ordering = ['quiz_title']
 
 class QuizDetailView(LoginRequiredMixin, DetailView):
     model = quizzes
@@ -200,20 +198,21 @@ class QuizDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'quiz/delete_quiz.html'
     success_url = '/quiz/quiz'
 
-def testquiz(request):
+#===================================================================================
+#           QUIZ ANSWERING AND SCORING
+#===================================================================================
+
+def take_quiz(request, *args, **kwargs):
 
     if request.method == 'POST':
         print(request.POST)
-        M = mcq.objects.all()
-        T = trueorfalse.objects.all()
-        I = identification.objects.all()
-        choice = TF.objects.all()
+        quiz = quizzes.objects.filter(id=kwargs['pk']).first()
         score=0
         wrong=0
         correct=0
         total=0
 
-        for m in M:
+        for m in quiz.mcq_questions.all():
             total+=1
             answer = request.POST.get(m.question) # Gets user’s choice, i.e the key of answer
             items = vars(m) # Holds the value for choice
@@ -227,7 +226,7 @@ def testquiz(request):
                 else:
                     wrong+=1
         
-        for t in T:
+        for t in quiz.tof_questions.all():
             total+=1
             answer = request.POST.get(t.question) # Gets user’s choice, i.e the key of answer
             items = vars(t) # Holds the value for choice
@@ -240,41 +239,42 @@ def testquiz(request):
                     correct+=1
                 else:
                     wrong+=1
-        
+        for i in quiz.identification_questions.all():
+            total+=1
+            answer = request.POST.get(i.question) # Gets user’s choice, i.e the key of answer
+            items = vars(i) # Holds the value for choice
+            if not request.POST.get(i.question):
+                wrong+=1
+            else:
+                #print(items[answer])
+                if str(i.answer) == answer: # Compares actual answer with user’s choice
+                    score+=10
+                    correct+=1
+                else:
+                    wrong+=1
 
-        percent = score/(total*10) *100
+        if total == 0:
+            percent = 0/100
+        else:
+            percent = score/(total*10)*100
+
         context = {
             'score':score,
             'correct':correct,
             'wrong':wrong,
-            'percent':percent,
+            'percent': int(percent),
             'total':total
         }
         return render(request,'quiz/testresult.html',context)
     else:
-        M = mcq.objects.all()
-        T = trueorfalse.objects.all()
-        I = identification.objects.all()
-        choice = TF.objects.first()
-        choice2 = TF.objects.last()
+        quiz = quizzes.objects.filter(id=kwargs['pk']).first()
         context = {
-            'M': M,
-            'T': T,
-            'I': I,
-            'choice': choice,
-            'choice2': choice2,
+            'Quiz': quiz,
+            'M': quiz.mcq_questions.all(),
+            'T': quiz.tof_questions.all(),
+            'I': quiz.identification_questions.all(),
         }
-        return render(request,'quiz/testquiz.html',context)
-
-def testquiz2(request):
-
-    if request.method == 'POST':
-        print(request.POST)
-        questions = quizzes.objects.all()
-        score=0
-        wrong=0
-        correct=0
-        total=0
+        return render(request,'quiz/take_quiz.html',context)
 
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
@@ -284,6 +284,10 @@ def render_to_pdf(template_src, context_dict={}):
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
+
+#===================================================================================
+#           RENDER TO PDF
+#===================================================================================
 
 class viewpdf(View):
     

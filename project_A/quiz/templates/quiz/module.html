@@ -9,11 +9,9 @@
     {% for item in key %}
         <article class="media content-section">
             <div class="media-body">
-                <div class="article-metadata">
-                    <h4 class="article-title">
-                        <a class="mr-2" href="{% url 'module-detail' item.id %}">{{ item.module }}</a>
-                    </h4>
-                </div>
+                <h4 class="article-title">
+                    <a class="mr-2" href="{% url 'module-detail' item.id %}">{{ item.module }}</a>
+                </h4>
             </div>
         </article>
     {% endfor %}
