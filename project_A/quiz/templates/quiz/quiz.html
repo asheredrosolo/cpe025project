@@ -15,7 +15,7 @@
                         <a class="form-group" href="{% url 'take-quiz' item.id %}">
                             <button type="button" class="btn ml-3 btn-warning font-weight-bold ml-30 float-right">Take Quiz</button>
                         </a>
-                        {% if user.is_superuser %}
+                        {% if user.is_staff %}
                             <a class="form-group" href="{% url 'quiz-edit' item.id %}">
                                 <button class="btn btn-outline-secondary float-right">Edit</button> 
                             </a>

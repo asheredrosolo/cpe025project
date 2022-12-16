@@ -10,21 +10,20 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
         <link rel="stylesheet" type="text/css" href="{% static 'sample_app/main.css' %}">
 
-        {% if title %}
-            <title>Title: {{ title }}</title>
-        {% else %}
-            <title>Sample Title</title>
-        {% endif %}
+        <title>Quiz Maker</title>
+
     </head>
     <body>
 
         <header class="site-header">
             <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
                 <div class="container">
-                        <a class="navbar-brand mr-4" href="{% url 'sample_app-home' %}">Quiz Maker</a>
+                        <a class="navbar-brand" href="{% url 'sample_app-home' %}">
+                            <img src="{%  static 'sample_app/pictures/LOGO.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+                            Quiz Maker
+                        </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                         </button>
@@ -60,9 +59,15 @@
                                 <a href="{% url 'module' %}">
                                     <li class="list-group-item list-group-item-light">Modules</li>
                                 </a>
-                                <a href="{% url 'questions' %}">
-                                    <li class="list-group-item list-group-item-light">Questions</li>
-                                </a>
+                                {% if user.is_staff %}
+                                    <a href="{% url 'questions' %}">
+                                        <li class="list-group-item list-group-item-light">Questions</li>
+                                    </a>
+                                {% else %}
+                                    <a href="#">
+                                        <li class="list-group-item list-group-item-light">Questions</li>
+                                    </a>
+                                {% endif %}
                                 <a href="{% url 'quiz' %}">
                                     <li class="list-group-item list-group-item-light">Quiz</li>
                                 </a>                                

@@ -12,6 +12,10 @@ from .models import (identification, mcq, modules, quizzes, scores,
 
 # Create your views here.
 
+class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
 #===================================================================================
 #           MODULES VIEW
 #===================================================================================
@@ -29,24 +33,24 @@ class ModuleListView(LoginRequiredMixin, ListView):
     context_object_name = 'key'
     ordering = ['module']
 
-class ModuleCreateView(LoginRequiredMixin, CreateView):
+class ModuleCreateView(StaffRequiredMixin, CreateView):
     model = modules
     fields = ['module']
 
     def form_valid(self, form):
         return super().form_valid(form)
 
-class ModuleDetailView(LoginRequiredMixin, DetailView):
+class ModuleDetailView(StaffRequiredMixin, DetailView):
     model = modules
 
-class ModuleUpdateView(LoginRequiredMixin, UpdateView):
+class ModuleUpdateView(StaffRequiredMixin, UpdateView):
     model = modules
     fields = ['module']
 
     def form_valid(self, form):
         return super().form_valid(form)
 
-class ModuleDeleteView(LoginRequiredMixin, DeleteView):
+class ModuleDeleteView(StaffRequiredMixin, DeleteView):
     model = modules
     success_url = '/quiz/modules/'
 
@@ -68,15 +72,15 @@ def cat_selection(request):
 #           DETAIL VIEW
 #-----------------------------------------------------------------------------------
 
-class MCQDetailView(LoginRequiredMixin, DetailView):
+class MCQDetailView(StaffRequiredMixin, DetailView):
     model = mcq
     template_name = 'quiz/mcq_detail.html'
 
-class TOFDetailView(LoginRequiredMixin, DetailView):
+class TOFDetailView(StaffRequiredMixin, DetailView):
     model = trueorfalse
     template_name = 'quiz/tof_detail.html'
 
-class IdentificationDetailView(LoginRequiredMixin, DetailView):
+class IdentificationDetailView(StaffRequiredMixin, DetailView):
     model = identification
     template_name = 'quiz/identification_detail.html'
 
@@ -84,7 +88,7 @@ class IdentificationDetailView(LoginRequiredMixin, DetailView):
 #           CREATE VIEW
 #-----------------------------------------------------------------------------------
 
-class MCQCreateView(LoginRequiredMixin, CreateView):
+class MCQCreateView(StaffRequiredMixin, CreateView):
     model = mcq
     fields = ['question', 'module', 'option1', 'option2', 'option3', 'option4', 'answer']
     template_name = 'quiz/create_mcq.html'
@@ -92,7 +96,7 @@ class MCQCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class TOFCreateView(LoginRequiredMixin, CreateView):
+class TOFCreateView(StaffRequiredMixin, CreateView):
     model = trueorfalse
     fields = ['question', 'module', 'answer']
     template_name = 'quiz/create_tof.html'
@@ -100,7 +104,7 @@ class TOFCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class IdentificationCreateView(LoginRequiredMixin, CreateView):
+class IdentificationCreateView(StaffRequiredMixin, CreateView):
     model = identification
     fields = ['question', 'module', 'answer']
     template_name = 'quiz/create_identification.html'
@@ -112,7 +116,7 @@ class IdentificationCreateView(LoginRequiredMixin, CreateView):
 #           UPDATE VIEW
 #-----------------------------------------------------------------------------------
 
-class MCQUpdateView(LoginRequiredMixin, UpdateView):
+class MCQUpdateView(StaffRequiredMixin, UpdateView):
     model = mcq
     fields = ['question', 'module', 'option1', 'option2', 'option3', 'option4', 'answer']
     template_name = 'quiz/create_mcq.html'
@@ -120,7 +124,7 @@ class MCQUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class TOFUpdateView(LoginRequiredMixin, UpdateView):
+class TOFUpdateView(StaffRequiredMixin, UpdateView):
     model = trueorfalse
     fields = ['question', 'module', 'answer']
     template_name = 'quiz/create_tof.html'
@@ -128,7 +132,7 @@ class TOFUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class IdentificationUpdateView(LoginRequiredMixin, UpdateView):
+class IdentificationUpdateView(StaffRequiredMixin, UpdateView):
     model = identification
     fields = ['question', 'module', 'answer']
     template_name = 'quiz/create_identification.html'
@@ -140,17 +144,17 @@ class IdentificationUpdateView(LoginRequiredMixin, UpdateView):
 #           DELETE VIEW
 #-----------------------------------------------------------------------------------
 
-class MCQDeleteView(LoginRequiredMixin, DeleteView):
+class MCQDeleteView(StaffRequiredMixin, DeleteView):
     model = mcq
     template_name = 'quiz/delete_mcq.html'
     success_url = '/quiz/questions/'
 
-class TOFDeleteView(LoginRequiredMixin, DeleteView):
+class TOFDeleteView(StaffRequiredMixin, DeleteView):
     model = trueorfalse
     template_name = 'quiz/delete_tof.html'
     success_url = '/quiz/questions/'
 
-class IdentificationDeleteView(LoginRequiredMixin, DeleteView):
+class IdentificationDeleteView(StaffRequiredMixin, DeleteView):
     model = identification
     template_name = 'quiz/delete_identification.html'
     success_url = '/quiz/questions/'
@@ -166,7 +170,7 @@ def quiz_view(request):
     }
     return render(request, "quiz/quiz.html", quiz_items)
 
-class QuizCreateView(LoginRequiredMixin, CreateView):
+class QuizCreateView(StaffRequiredMixin, CreateView):
     model = quizzes
     fields = ['quiz_title', 'module', 'mcq_questions', 'tof_questions', 'identification_questions' ]
     template_name = 'quiz/create_quiz.html'
@@ -185,7 +189,7 @@ class QuizDetailView(LoginRequiredMixin, DetailView):
     model = quizzes
     template_name = 'quiz/quiz_edit.html'
 
-class QuizUpdateView(LoginRequiredMixin, UpdateView):
+class QuizUpdateView(StaffRequiredMixin, UpdateView):
     model = quizzes
     fields = ['quiz_title', 'module', 'mcq_questions', 'tof_questions', 'identification_questions' ]
     template_name = 'quiz/create_quiz.html'
@@ -193,7 +197,7 @@ class QuizUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
-class QuizDeleteView(LoginRequiredMixin, DeleteView):
+class QuizDeleteView(StaffRequiredMixin, DeleteView):
     model = quizzes
     template_name = 'quiz/delete_quiz.html'
     success_url = '/quiz/quiz'
@@ -342,6 +346,4 @@ class ScoreListView(LoginRequiredMixin, ListView):
     template_name = 'quiz/scores.html' #<app>/<model>_<viewtype>.html
     context_object_name = 'key'
     ordering = ['date']
-
-
 
